@@ -1,0 +1,145 @@
+hyperledger:
+    fabricTLS: true
+    fabricCATLS: true
+    channel:
+        name: counterchannelkotlin
+        profile: ThreeOrgsChannel
+        configPath: ../../network/configtx
+        txFile: ../../artifacts/counterchannel.tx
+    organizations:
+        -   name: org1
+            mspId: Org1MSP
+            domain: org1.delobz.com
+            caName: ca-org1
+            peers:
+                -   name: peer0
+                    url: grpcs://localhost:7051
+                    adminUserName: admin
+                    users:
+                        -   appUser
+                    props:
+                        pemFile: ../../network/organizations/peerOrganizations/org1.delobz.com/peers/peer0.org1.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: peer0.org1.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+            orderers:
+                -   name: orderer
+                    url: grpcs://localhost:7050
+                    props:
+                        pemFile: ../../network/organizations/ordererOrganizations/delobz.com/orderers/orderer.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: orderer.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+        -   name: org2
+            mspId: Org2MSP
+            domain: org2.delobz.com
+            caName: ca-org2
+            peers:
+                -   name: peer0
+                    url: grpcs://localhost:8051
+                    adminUserName: admin
+                    users:
+                        -   appUser
+                    props:
+                        pemFile: ../../network/organizations/peerOrganizations/org2.delobz.com/peers/peer0.org2.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: peer0.org2.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+            orderers:
+                -   name: orderer
+                    url: grpcs://localhost:7050
+                    props:
+                        pemFile: ../../network/organizations/ordererOrganizations/delobz.com/orderers/orderer.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: orderer.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+        -   name: org3
+            mspId: Org3MSP
+            domain: org3.delobz.com
+            caName: ca-org3
+            peers:
+                -   name: peer0
+                    url: grpcs://localhost:9051
+                    adminUserName: admin
+                    users:
+                        -   appUser
+                    props:
+                        pemFile: ../../network/organizations/peerOrganizations/org3.delobz.com/peers/peer0.org3.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: peer0.org3.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+            orderers:
+                -   name: orderer
+                    url: grpcs://localhost:7050
+                    props:
+                        pemFile: ../../network/organizations/ordererOrganizations/delobz.com/orderers/orderer.delobz.com/tls/server.crt
+                        # clientKeyFile: 
+                        # clientCertFile: 
+                        hostnameOverride: orderer.delobz.com
+                        sslProvider: openSSL
+                        negotiationType: TLS
+    fabricCAs:
+        -   name: ca-org1
+            url: https://localhost:7054
+            adminUserName: admin
+            props:
+                pemFile: ../../network/organizations/peerOrganizations/org1.delobz.com/ca/ca.org1.delobz.com-cert.pem
+                allowAllHostNames: "true"
+        -   name: ca-org2
+            url: https://localhost:8054
+            adminUserName: admin
+            props:
+                pemFile: ../../network/organizations/peerOrganizations/org2.delobz.com/ca/ca.org2.delobz.com-cert.pem
+                allowAllHostNames: "true"
+        -   name: ca-org3
+            url: https://localhost:9054
+            adminUserName: admin
+            props:
+                pemFile: ../../network/organizations/peerOrganizations/org3.delobz.com/ca/ca.org3.delobz.com-cert.pem
+                allowAllHostNames: "true"
+        -   name: ca-orderer
+            url: https://localhost:10054
+            adminUserName: admin
+    chaincodes:
+        -   name: counter_cc_kotlin
+            version: 1
+            label: CounterLabel
+            type: java
+            sourceLocation: ../../chaincode/build/install/counter-chaincode
+            path:
+            metadadataSource:
+            initRequired: false
+            deployWaitTime: 300000
+            invokeWaitTime: 32000
+            proposalWaitTime: 120000
+            collectionConfigurationPath: ../../network/privatecollections/private-collections.yaml
+            orgs:
+                -   org1
+                -   org2
+                -   org3
+        -   name: counter_cc_java
+            version: 1
+            label: CounterLabel
+            type: java
+            sourceLocation: ../../chaincode-java
+            path:
+            metadadataSource:
+            initRequired: true
+            deployWaitTime: 300000
+            invokeWaitTime: 32000
+            proposalWaitTime: 120000
+            collectionConfigurationPath:
+            orgs:
+                -   org1
+                -   org2
+                -   org3
